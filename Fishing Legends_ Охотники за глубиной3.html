@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><title>Fishing Legends: Охотники за глубиной</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#082a31;--glass:rgba(6,36,44,.76);--paper:#f6edd3;--sun:#ffb347;--coral:#ef5d4b;--teal:#2cc9bd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font:700 14px Nunito,'Trebuchet MS',sans-serif}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+.h{position:fixed;background:var(--glass);border:2px solid #f6edd344;border-radius:12px;padding:8px 12px;pointer-events:none}
+#tl{left:10px;top:max(10px,env(safe-area-inset-top))}#tr{right:10px;top:max(10px,env(safe-area-inset-top));text-align:right}#q{left:10px;bottom:max(10px,env(safe-area-inset-bottom));max-width:330px}
+#xp{height:6px;background:#0007;border-radius:4px;margin:5px 0;overflow:hidden}#xp i{display:block;height:100%;background:var(--sun)}
+#msg{position:fixed;left:50%;top:16%;transform:translateX(-50%);font:19px 'Russo One',sans-serif;text-shadow:0 2px 8px #000;opacity:0;transition:opacity .3s;text-align:center;pointer-events:none;max-width:84vw}#msg.on{opacity:1}
+#pr{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--sun);color:var(--ink);padding:6px 16px;border-radius:20px;font-weight:800}
+#xh{position:fixed;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:#fff;opacity:.7}
+#fight{left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(540px,92vw)}
+.m{height:13px;background:#0008;border-radius:7px;overflow:hidden;margin:3px 0 7px;position:relative}.m i{display:block;height:100%;width:0;transition:width .08s}
+#tz{position:absolute;left:35%;width:53%;top:0;height:100%;background:#2cc9bd44}
+#power{position:fixed;left:50%;bottom:130px;width:240px;height:14px;transform:translateX(-50%);background:#0009;border:2px solid var(--paper);border-radius:8px;overflow:hidden}#pb{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--sun),var(--coral))}
+#card{position:fixed;left:50%;top:12%;transform:translateX(-50%);background:var(--paper);color:var(--ink);padding:14px 22px;border-radius:16px;text-align:center;box-shadow:0 10px 40px #0008}
+#card h2{margin:4px 0;font:24px 'Russo One',sans-serif}
+#panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(780px,94vw);max-height:86vh;overflow:auto;background:rgba(6,36,44,.95);border:2px solid #f6edd355;border-radius:16px;padding:18px 22px}
+h2,h3{font-family:'Russo One',sans-serif;font-weight:400;margin:.2em 0 .5em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.it{background:#ffffff12;border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:5px;font-size:13px}.it.sel{outline:2px solid var(--sun)}.it i{font-style:normal;opacity:.75}
+button,select{font:800 14px Nunito,sans-serif;background:var(--sun);color:var(--ink);border:0;border-radius:9px;padding:7px 12px;cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #fff}
+.x{margin-top:14px;background:var(--paper)}.tabs{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:3;background:#06242c;margin:-18px -22px 12px;padding:14px 22px 10px;border-bottom:1px solid #f6edd322}#comp{left:50%;top:max(10px,env(safe-area-inset-top));transform:translateX(-50%);text-align:center}.tb{background:#ffffff1c;color:var(--paper)}.tb.on{background:var(--sun);color:var(--ink)}
+#start{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(160deg,#08303acc,#ff9a6244 90%);overflow:auto}
+#start .b{max-width:640px;padding:22px;text-align:center}#start h1{font:clamp(34px,7vw,64px) 'Russo One',sans-serif;margin:0;color:var(--paper);text-shadow:0 4px 0 #0a5a60}
+#start h1+p{font:20px 'Russo One',sans-serif;color:var(--sun);margin:.2em 0 1em}
+#start table{margin:0 auto 16px;text-align:left;font-size:14px;border-spacing:8px 3px}kbd{background:var(--paper);color:var(--ink);border-radius:5px;padding:1px 7px}
+#go{font-size:20px;padding:12px 34px;background:var(--coral);color:#fff;border-radius:30px}
+@media (prefers-reduced-motion:reduce){#msg{transition:none}}
+</style></head><body>
+<canvas id="c"></canvas><div id="xh"></div>
+<div id="tl" class="h"><b id="money"></b> &nbsp; Уровень <b id="lvl"></b><div id="xp"><i id="xpb"></i></div><div id="gear"></div></div>
+<div id="tr" class="h"><div id="clk"></div><div id="wxs"></div></div>
+<div id="q" class="h"></div><div id="comp" class="h" hidden></div><div id="msg"></div><div id="pr" hidden></div>
+<div id="power" hidden><i id="pb"></i></div>
+<div id="fight" class="h" hidden>Натяжение лески<div class="m"><div id="tz"></div><i id="bT" style="background:var(--teal)"></i></div>Усталость рыбы<div class="m"><i id="bS" style="background:var(--sun)"></i></div>Расстояние<div class="m"><i id="bD" style="background:#7fd0ff"></i></div><span style="font-size:12px;opacity:.85">ЛКМ — тянуть · A/D — удилище против хода рыбы (она быстрее устаёт) · Пробел — отпустить леску</span><div id="fdir" style="margin-top:6px;font:16px 'Russo One',sans-serif;text-align:center"></div></div>
+<div id="card" hidden></div><div id="panel" hidden></div>
+<div id="start"><div class="b"><h1>Fishing Legends</h1><p>Охотники за глубиной: Тайна Изумрудного озера</p>
+<table><tr><td><kbd>WASD</kbd> ходьба, <kbd>Shift</kbd> бег</td><td>Мышь — камера (или правая кнопка / стрелки)</td></tr>
+<tr><td>ЛКМ (держать) — заброс, ЛКМ — подсечка и тяга</td><td><kbd>E</kbd> взаимодействие</td></tr>
+<tr><td><kbd>Пробел</kbd> ослабить леску, <kbd>A</kbd>/<kbd>D</kbd> удилище против хода рыбы</td><td><kbd>Tab</kbd> инвентарь, <kbd>M</kbd> карта</td></tr></table>
+<p style="font:600 14px Nunito,sans-serif;color:var(--paper)">Качество графики: <select id="qual"><option value="0">Низкое</option><option value="1">Среднее</option><option value="2">Высокое (тени)</option></select></p>
+<button id="go">Играть</button></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+const $=i=>document.getElementById(i),R=Math.random,cl=(v,a,b)=>Math.max(a,Math.min(b,v)),lp=(a,b,t)=>a+(b-a)*t,PI=Math.PI;
+const ang=(a,b,t)=>{const d=((b-a+PI)%(2*PI)+2*PI)%(2*PI)-PI;return a+d*t};
+const FISH=[['Окунь',.2,1.2,.6,.3,30,12,'#7a9a3a',1,'Обычная'],['Щука',1.5,8,1,.4,12,14,'#4f7a3b',1,'Обычная'],['Судак',1,6,.9,.8,10,16,'#8f957c',1,'Необычная'],['Карп',2,12,.8,.6,14,10,'#c79a4b',0,'Обычная'],['Сом',5,40,.7,.9,4,12,'#5a5446',1,'Необычная'],['Форель',.5,3,1.1,.3,10,20,'#b08f9a',1,'Необычная'],['Лосось',2,9,1.2,.5,5,24,'#e58b78',1,'Редкая'],['Осётр',8,45,.8,1,2.5,30,'#6f7b88',0,'Редкая'],['Радужная форель',.8,4,1.2,.3,0,28,'#e04bd0',1,'Эпическая'],['Золотой карп',3,9,1,.5,0,90,'#ffc733',0,'Эпическая'],['Гигантская щука',15,30,1.6,.6,0,40,'#2f6b3b',1,'Эпическая'],['Озёрный монстр',80,150,1.8,1,0,60,'#6b3aa0',1,'Легендарная'],['Плотва',.1,.8,.7,.2,28,8,'#b9c3c9',0,'Обычная'],['Лещ',.8,4,.7,.5,16,11,'#a99a6b',0,'Обычная'],['Налим',.5,6,.8,.9,6,15,'#6e6a4a',1,'Необычная'],['Линь',.4,3,.6,.7,9,13,'#5f7a4a',0,'Необычная'],['Голавль',.5,4,.9,.4,8,14,'#9aa37a',1,'Необычная'],['Хариус',.3,2,1.2,.4,5,22,'#7aa0b8',1,'Редкая'],['Белуга',20,60,.9,1,1.2,40,'#4a5766',0,'Эпическая'],['Лунный сиг',2,8,1.1,.6,0,70,'#cfe8ff',0,'Эпическая'],['Ёрш',.05,.3,.6,.8,10,6,'#8a7a4a',1,'Обычная'],['Язь',.5,3,.8,.4,10,12,'#d9a45a',0,'Обычная'],['Жерех',1,6,1.3,.3,5,18,'#8aa0b0',1,'Редкая'],['Стерлядь',1,5,.9,.9,3,35,'#8a7a6a',0,'Редкая'],['Чёрный амур',5,25,.9,.6,2,22,'#3a3f4a',0,'Редкая'],['Белый сом',15,50,.9,1,.6,45,'#e8e8e0',1,'Эпическая']];
+const RAR=['Обычная','Необычная','Редкая','Эпическая','Легендарная'],LV=['Базовый','Карбон','Мастер'];
+const UPS=[['rod','Удилище','рыба тянет слабее',[120,420]],['reel','Катушка','быстрее вываживание',[150,450]],['line','Леска','прочнее, не рвётся',[100,380]],['boat','Лодка','быстрее ход',[200,600]]];
+const BAITS=[['Хлеб',0],['Червь',25],['Блесна',90],['Воблер',220]],AFF=[[1,1.4,.4,.5],[.2,.5,1.3,1.6]];
+const SIDE=[['Поймай окуня',40],['Поймай рыбу тяжелее 5 кг',120],['Поймай радужную форель (только в дождь)',200],['Ночью в грозу поймай любую рыбу',250],['Найди затонувший сундук (в лодке, E)',150],['Поймай рыбу длиннее 100 см',180],['Поймай рыбу во время дождя',100],['Рыбачь на рассвете: поймай рыбу с 5 до 7 часов',110],['Поймай золотого карпа',300],['Поймай озёрного монстра',1000],['Поймай 5 разных видов рыб',150],['Выиграй соревнование у Фёдора',200]];
+const MK=[{t:'Поймай 5 окуней',n:5,r:80,f:f=>f.i==0},{t:'Поймай щуку тяжелее 4 кг',n:1,r:150,f:f=>f.i==1&&f.kg>=4},{t:'Поймай 3 карпа',n:3,r:140,f:f=>f.i==3},{t:'Поймай 3 рыбы ночью',n:3,r:200,f:()=>night()},{t:'Поймай 4 мирные рыбы: карп, плотва, лещ или линь',n:4,r:180,f:f=>[3,12,13,15].includes(f.i)},{t:'Поймай рыбу тяжелее 10 кг',n:1,r:250,f:f=>f.kg>=10},{t:'Поймай 2 рыбы в дождь или грозу',n:2,r:220,f:()=>wx>0},{t:'Поймай 3 редкие рыбы (редкая и выше)',n:3,r:400,f:f=>RAR.indexOf(FISH[f.i][9])>=2},{t:'Поймай лунного сига (только ночью)',n:1,r:600,f:f=>f.i==19}];
+const ACH=[['Первый улов',()=>S.caught>=1],['Десять рыб',()=>S.caught>=10],['Коллекционер: 6 видов',()=>Object.keys(S.best).length>=6],['Рекорд: более 20 кг',()=>Object.values(S.best).some(v=>v>=20)],['Легенда озера',()=>S.done],['Двадцать пять рыб',()=>S.caught>=25],['Сотня рыб',()=>S.caught>=100],['Коллекционер: 12 видов',()=>Object.keys(S.best).length>=12],['Полная книга улова',()=>Object.keys(S.best).length>=FISH.length],['Тяжеловес: более 50 кг',()=>Object.values(S.best).some(v=>v>=50)],['Богач: $2000',()=>S.money>=2000],['Мастер снастей',()=>S.rod>=2&&S.reel>=2&&S.line>=2],['Уровень 5',()=>S.lvl>=5],['Друг Макара',()=>S.mk>=MK.length],['Охотник за заданиями',()=>SIDE.every((s,i)=>S.side[i])],['Победа над Фёдором',()=>S.cw>=1],['Чемпион озера',()=>S.cw>=5]];
+const AQ=[];let aqT=0;function checkAch(){ACH.forEach((a,i)=>{if(!S.ach[i]&&a[1]()){S.ach[i]=1;AQ.push(a[0])}})}
+let S={money:30,xp:0,lvl:1,rep:0,q:0,caught:0,best:{},rod:0,reel:0,line:0,boat:0,baits:[1,0,0,0],bait:0,side:[0,0,0,0,0],ach:{},t:7,has:0,wear:0,ql:1,done:0,mk:0,mka:0,mkp:0,mkd:0,cw:0};
+try{const j=JSON.parse(localStorage.getItem('fl2'));if(j)Object.assign(S,j)}catch(e){}
+function save(){if(window.NOSAVE)return;try{localStorage.setItem('fl2',JSON.stringify(S))}catch(e){}}
+setInterval(save,10000);
+// ---------- audio
+let AC,nb;
+function au(){if(AC)return;try{AC=new(window.AudioContext||window.webkitAudioContext)();nb=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate);const d=nb.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=R()*2-1;const s=AC.createBufferSource();s.buffer=nb;s.loop=true;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=420;const g=AC.createGain();g.gain.value=.05;s.connect(f);f.connect(g);g.connect(AC.destination);s.start()}catch(e){AC=null}}
+function noise(fr,ty,len,v){if(!AC)return;const s=AC.createBufferSource();s.buffer=nb;const f=AC.createBiquadFilter();f.type=ty;f.frequency.value=fr;const g=AC.createGain();g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+len);s.connect(f);f.connect(g);g.connect(AC.destination);s.start();s.stop(AC.currentTime+len)}
+function beep(fr,len,v,ty){if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.type=ty||'sine';o.frequency.value=fr;g.gain.setValueAtTime(v||.15,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+len);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+len)}
+// ---------- renderer / scene
+const cv=$('c'),rd=new THREE.WebGLRenderer({canvas:cv,antialias:true});rd.shadowMap.type=THREE.PCFSoftShadowMap;
+const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,700);cam.position.set(0,8,60);
+sc.fog=new THREE.FogExp2(0x88ccff,.006);
+const hemi=new THREE.HemisphereLight(0xbfe9ff,0x4a6a3a,.8),sun=new THREE.DirectionalLight(0xfff0d0,1);sc.add(hemi,sun,sun.target);
+sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.bias=-.0006;{const s=sun.shadow.camera;s.left=s.bottom=-50;s.right=s.top=50;s.far=400}
+function setQ(){rd.setPixelRatio([.7,1,Math.min(devicePixelRatio||1,2)][S.ql]);rd.shadowMap.enabled=S.ql==2;rd.setSize(innerWidth,innerHeight);sc.traverse(o=>{if(o.material)o.material.needsUpdate=true})}
+addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();rd.setSize(innerWidth,innerHeight)});
+const mat=c=>new THREE.MeshLambertMaterial({color:c});
+function box(w,h,d,c,x,y,z,p){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat(c));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;(p||sc).add(m);return m}
+function cone(r,h,sg,c,x,y,z,p){const m=new THREE.Mesh(new THREE.ConeGeometry(r,h,sg),mat(c));m.position.set(x,y,z);m.castShadow=true;(p||sc).add(m);return m}
+function cyl(r1,r2,h,c,x,y,z,p){const m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,8),mat(c));m.position.set(x,y,z);m.castShadow=true;(p||sc).add(m);return m}
+const sunM=new THREE.Mesh(new THREE.SphereGeometry(10,16,12),new THREE.MeshBasicMaterial({color:0xfff2b0,fog:false})),moonM=new THREE.Mesh(new THREE.SphereGeometry(6,16,12),new THREE.MeshBasicMaterial({color:0xdfe8ff,fog:false}));sc.add(sunM,moonM);
+const stars=new THREE.Points((()=>{const g=new THREE.BufferGeometry(),a=new Float32Array(900);for(let i=0;i<300;i++){const u=R()*6.28,v=R()*1.4+.1,r=480;a[i*3]=Math.cos(u)*Math.cos(v)*r;a[i*3+1]=Math.sin(v)*r;a[i*3+2]=Math.sin(u)*Math.cos(v)*r}g.setAttribute('position',new THREE.BufferAttribute(a,3));return g})(),new THREE.PointsMaterial({color:0xffffff,size:2,fog:false,transparent:true,opacity:0}));stars.frustumCulled=false;sc.add(stars);
+const SK=[[0,'#050c1c'],[5,'#0b1630'],[6.3,'#ff9a62'],[8,'#7fd0ff'],[12,'#58bfff'],[17,'#7fd0ff'],[18.8,'#ff6f4e'],[20.3,'#1c1a44'],[22,'#07101f'],[24,'#050c1c']].map(a=>[a[0],new THREE.Color(a[1])]);
+function skyAt(t){for(let i=0;i<SK.length-1;i++)if(t>=SK[i][0]&&t<=SK[i+1][0])return SK[i][1].clone().lerp(SK[i+1][1],(t-SK[i][0])/(SK[i+1][0]-SK[i][0]));return SK[0][1].clone()}
+// ---------- terrain
+function H(x,z){const d=Math.hypot(x/85,(z+8)/65);let h=-5+Math.max(0,d-.62)*34+Math.sin(x*.07)*Math.cos(z*.06)*1.6*Math.min(1,d);if(d>1)h+=(d-1)*(d-1)*60*(1+.5*Math.sin(x*.03+z*.04));return h}
+const onDock=(x,z)=>x>2.4&&x<5.6&&z>33&&z<44.8,G=(x,z)=>onDock(x,z)?Math.max(.475,H(x,z)):H(x,z);
+{const g=new THREE.PlaneGeometry(420,420,140,140);g.rotateX(-PI/2);const p=g.attributes.position,col=new Float32Array(p.count*3),c=new THREE.Color(),A=new THREE.Color('#3f9a3a'),B=new THREE.Color('#78bf4c'),C=new THREE.Color('#7b8a6c'),D=new THREE.Color('#8f9499');
+for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),h=H(x,z);p.setY(i,h);const n=Math.sin(x*.5)*Math.cos(z*.43)*.5+.5;
+if(h<-.4)c.set('#a39468');else if(h<1)c.set('#dcc88c');else if(h<16)c.copy(A).lerp(B,n);else if(h<38)c.copy(C).lerp(D,n);else c.set('#f2f6fa');col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}
+g.setAttribute('color',new THREE.BufferAttribute(col,3));g.computeVertexNormals();const m=new THREE.Mesh(g,new THREE.MeshLambertMaterial({vertexColors:true}));m.receiveShadow=true;sc.add(m)}
+const wg=new THREE.PlaneGeometry(150,125,60,50);wg.rotateX(-PI/2);const wp=wg.attributes.position,w0=Float32Array.from(wp.array);
+const water=new THREE.Mesh(wg,new THREE.MeshPhongMaterial({color:0x1fb5b0,transparent:true,opacity:.7,shininess:140,specular:0xcffcff}));water.position.set(0,0,-8);sc.add(water);
+const wv=(x,z,t)=>.09*Math.sin(x*.3+t*1.4)+.06*Math.sin(z*.4+t*1.1)+.04*Math.sin((x+z)*.7+t*2);
+{const N=380,tr=new THREE.InstancedMesh(new THREE.CylinderGeometry(.25,.35,2,6),mat('#6b4a2b'),N),cr=new THREE.InstancedMesh(new THREE.ConeGeometry(1.8,5,7),mat('#ffffff'),N),d=new THREE.Object3D(),c=new THREE.Color();let n=0,k=0;
+while(n<N&&k++<7000){const x=(R()-.5)*360,z=(R()-.5)*360,h=H(x,z);if(h<1.3||h>26||Math.hypot(x,z-45)<17)continue;const s=.8+R()*1.3;d.position.set(x,h+s,z);d.scale.set(s,s,s);d.rotation.y=R()*6;d.updateMatrix();tr.setMatrixAt(n,d.matrix);d.position.y=h+s*3.6;d.updateMatrix();cr.setMatrixAt(n,d.matrix);cr.setColorAt(n,c.setHSL(.27+R()*.08,.55,.2+R()*.14));n++}
+tr.count=cr.count=n;tr.castShadow=cr.castShadow=true;sc.add(tr,cr);
+const rr=new THREE.InstancedMesh(new THREE.CylinderGeometry(.03,.05,1.6,4),mat('#7d9a3a'),160);n=0;k=0;while(n<160&&k++<9000){const x=(R()-.5)*150,z=-8+(R()-.5)*125,h=H(x,z);if(h<-.9||h>-.1)continue;d.position.set(x,.5,z);d.scale.set(1,.7+R()*.8,1);d.rotation.set(0,0,(R()-.5)*.2);d.updateMatrix();rr.setMatrixAt(n++,d.matrix)}rr.count=n;sc.add(rr);
+const rk=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,0),mat('#8a8f94'),70);n=0;k=0;while(n<70&&k++<5000){const x=(R()-.5)*300,z=(R()-.5)*300,h=H(x,z);if(h<-.3||h>30||Math.hypot(x,z-45)<10)continue;const s=.6+R()*2.2;d.position.set(x,h,z);d.scale.set(s,s*.7,s);d.rotation.set(R()*3,R()*3,0);d.updateMatrix();rk.setMatrixAt(n++,d.matrix)}rk.count=n;rk.castShadow=true;sc.add(rk)}
+// ---------- camp
+const gy=H(0,46);
+box(6,3,5.5,'#9b6b3f',-9,H(-9,46)+1.5,46);{const r=cone(4.6,2.2,4,'#a83c2f',-9,H(-9,46)+4.1,46);r.rotation.y=PI/4}box(1.1,2,.15,'#4a2c18',-9,H(-9,46)+1,43.2);
+{const t=cone(2.6,2.8,4,'#ff9b3d',9,H(9,47)+1.4,47);t.rotation.y=PI/4}
+box(1.8,.12,.9,'#7a5230',3,gy+.9,46);[[-.8,-.35],[.8,-.35],[-.8,.35],[.8,.35]].forEach(a=>box(.1,.9,.1,'#5a3a1f',3+a[0],gy+.45,46+a[1]));
+const tblRod=cyl(.02,.03,2.2,'#2b2b2b',3,gy+1,46);tblRod.rotation.z=PI/2;tblRod.visible=!S.has;
+const fire=new THREE.Mesh(new THREE.ConeGeometry(.5,1.1,6),new THREE.MeshBasicMaterial({color:0xff7a1a}));fire.position.set(.5,H(.5,43.5)+.6,43.5);sc.add(fire);for(let i=0;i<6;i++)cyl(.15,.15,.3,'#777',.5+Math.cos(i)*.7,H(.5,43.5)+.1,43.5+Math.sin(i)*.7);
+const fireL=new THREE.PointLight(0xff8a3a,1,16);fireL.position.set(.5,H(.5,43.5)+1.2,43.5);sc.add(fireL);
+box(3.2,.25,11.8,'#a9794a',4,.35,38.9);[[2.6,33.3],[5.4,33.3],[2.6,38],[5.4,38],[2.6,43],[5.4,43]].forEach(a=>cyl(.12,.12,2.2,'#6b4a2b',a[0],-.4,a[1]));
+const npc=new THREE.Group();npc.position.set(-3.5,H(-3.5,44),44);npc.rotation.y=PI;sc.add(npc);cyl(.34,.4,1,'#a84b2a',0,1.1,0,npc);{const h=new THREE.Mesh(new THREE.SphereGeometry(.28,12,10),mat('#e9bf98'));h.position.y=1.85;npc.add(h);const b=new THREE.Mesh(new THREE.SphereGeometry(.22,10,8),mat('#f2f2f2'));b.position.set(0,1.62,.12);npc.add(b);cone(.4,.35,8,'#e8c24a',0,2.2,0,npc)}
+// boat
+const boat=new THREE.Group();sc.add(boat);box(1.8,.5,3.8,'#c8553d',0,.1,0,boat);box(1.5,.2,3.4,'#8a5a36',0,.28,0,boat);{const b=cone(.9,1.6,4,'#c8553d',0,.1,2.5,boat);b.rotation.set(PI/2,0,PI/4)}box(1.4,.08,.4,'#6b4a2b',0,.55,-.6,boat);
+const Bp={x:8.5,z:37,a:PI};
+const RX=3.1,RZ=34.5,riv=new THREE.Group();riv.position.set(RX,.5,RZ);riv.rotation.y=PI;sc.add(riv);cyl(.34,.4,1,'#2e8a5a',0,1.1,0,riv);{const h=new THREE.Mesh(new THREE.SphereGeometry(.28,12,10),mat('#e9bf98'));h.position.y=1.85;riv.add(h);cone(.45,.4,8,'#c0392b',0,2.2,0,riv)}
+const rrp=new THREE.Group();rrp.position.set(.4,1.2,.15);{const m=new THREE.Mesh(new THREE.CylinderGeometry(.018,.03,2.8,6),mat('#5a3a1f'));m.position.y=1.4;rrp.add(m)}rrp.rotation.x=1.1;riv.add(rrp);
+// sunken tree, beacon, chest
+const TX=26,TZ=-28,tree=new THREE.Group();tree.position.set(TX,-.5,TZ);sc.add(tree);{const t=cyl(.45,.7,7,'#4a3a2a',0,0,0,tree);t.rotation.z=.2;[[.8,1.4,.9],[-.7,.4,-.8],[.2,2.2,.5]].forEach(a=>{const b=cyl(.08,.18,2.4,'#4a3a2a',a[0],a[1],a[2],tree);b.rotation.z=a[0]>0?-1.1:1.1})}
+const beacon=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,40,12,1,true),new THREE.MeshBasicMaterial({color:0xffd23f,transparent:true,opacity:.28,fog:false,depthWrite:false}));beacon.position.set(TX,18,TZ);sc.add(beacon);
+const chestM=new THREE.Group();chestM.position.set(-30,H(-30,-6)+.3,-6);sc.add(chestM);box(1.2,.7,.8,'#8a5a2a',0,0,0,chestM);box(1.25,.12,.85,'#e8c24a',0,.4,0,chestM);
+const chestRing=new THREE.Mesh(new THREE.RingGeometry(1,1.3,24),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.5,side:THREE.DoubleSide}));chestRing.rotation.x=-PI/2;chestRing.position.set(-30,.08,-6);sc.add(chestRing);chestM.visible=chestRing.visible=!S.side[4];
+// ---------- player
+const pl=new THREE.Group();sc.add(pl);cyl(.32,.38,.95,'#2a78c2',0,1.15,0,pl);{const h=new THREE.Mesh(new THREE.SphereGeometry(.27,12,10),mat('#f1c9a0'));h.position.y=1.85;pl.add(h);cyl(.42,.42,.06,'#e8c24a',0,2.05,0,pl);cyl(.25,.28,.22,'#e8c24a',0,2.15,0,pl)}
+const legs=[-1,1].map(s=>{const g=new THREE.Group();g.position.set(s*.16,.7,0);const m=new THREE.Mesh(new THREE.BoxGeometry(.2,.7,.22),mat('#3a3a4a'));m.position.y=-.35;g.add(m);pl.add(g);return g});
+const rp=new THREE.Group();rp.position.set(.4,1.2,.15);const rm=new THREE.Mesh(new THREE.CylinderGeometry(.018,.03,2.8,6),mat('#2b2b2b'));rm.position.y=1.4;rp.add(rm);const tip=new THREE.Object3D();tip.position.y=1.4;rm.add(tip);rp.rotation.x=1.05;rp.visible=!!S.has;pl.add(rp);
+const lure=new THREE.Group();lure.add(new THREE.Mesh(new THREE.SphereGeometry(.16,10,8),mat('#ef5d4b')));{const s=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,.4),mat('#ffffff'));s.position.y=.25;lure.add(s)}lure.visible=false;sc.add(lure);
+const lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.BufferAttribute(new Float32Array(6),3));const lineM=new THREE.Line(lg,new THREE.LineBasicMaterial({color:0xffffff}));lineM.frustumCulled=false;lineM.visible=false;sc.add(lineM);
+// ---------- fish models / thumbnails
+function mkFish(c,L){const g=new THREE.Group(),m=new THREE.MeshStandardMaterial({color:c,roughness:.5});const b=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),m);b.scale.set(1,.38,.28);g.add(b);
+const t=new THREE.Mesh(new THREE.ConeGeometry(.3,.6,4),m);t.rotation.z=-PI/2;t.position.x=-1.2;g.add(t);const f=new THREE.Mesh(new THREE.ConeGeometry(.18,.5,3),m);f.position.y=.4;g.add(f);
+const e=new THREE.Mesh(new THREE.SphereGeometry(.07,8,6),new THREE.MeshBasicMaterial({color:0x111111}));e.position.set(.7,.1,.2);g.add(e);g.scale.setScalar(L);return g}
+let tr_,ts_,tc_;const thumbs={};
+function thumb(i){if(thumbs[i])return thumbs[i];if(!tr_){tr_=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});tr_.setSize(150,90);tr_.setClearColor(0,0);ts_=new THREE.Scene();ts_.add(new THREE.HemisphereLight(0xffffff,0x446655,1.3));const d=new THREE.DirectionalLight(0xffffff,1);d.position.set(2,3,4);ts_.add(d);tc_=new THREE.PerspectiveCamera(30,150/90,.1,20);tc_.position.set(0,.3,4.8);tc_.lookAt(0,0,0)}
+const f=mkFish(FISH[i][7],1);f.rotation.y=-.5;ts_.add(f);tr_.render(ts_,tc_);ts_.remove(f);return thumbs[i]=tr_.domElement.toDataURL()}
+// ---------- effects
+const rings=[],ringG=new THREE.RingGeometry(.25,.33,32);ringG.rotateX(-PI/2);
+function ring(x,z,s){const m=new THREE.Mesh(ringG,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.8,depthWrite:false}));m.position.set(x,.07,z);sc.add(m);rings.push({m,t:0,s:s||1})}
+const parts=[],pg=new THREE.SphereGeometry(.07,6,5),pm=new THREE.MeshBasicMaterial({color:0xe8fbff});
+function splash(x,y,z,n,v){for(let i=0;i<n;i++){const m=new THREE.Mesh(pg,pm);m.position.set(x,y,z);sc.add(m);const a=R()*6.28,s=1+R()*2*v;parts.push({m,vx:Math.cos(a)*s,vy:2+R()*3*v,vz:Math.sin(a)*s})}ring(x,z,1.2)}
+const shG=new THREE.CircleGeometry(1,12);shG.rotateX(-PI/2);const shM=new THREE.MeshBasicMaterial({color:0x05303a,transparent:true,opacity:.6,depthWrite:false}),shd=[];
+for(let i=0;i<16;i++){const m=new THREE.Mesh(shG,shM);let x,z;do{x=(R()-.5)*120;z=-8+(R()-.5)*100}while(H(x,z)>-2.6);m.position.set(x,-.12,z);const s=.6+R()*1.2;m.scale.set(s*1.6,1,s*.6);sc.add(m);shd.push({m,a:R()*6.28,v:.4+R()*.8})}
+const jmp=[];let jumpT=4,evT=30,wxT=80,wx=0,wk=1,wd=.006,flash=0,lt=5,nightT=8,spot=null,spotM=null,ringT=0,rainT=0;
+const rn=new THREE.Points((()=>{const g=new THREE.BufferGeometry(),a=new Float32Array(2700);for(let i=0;i<900;i++){a[i*3]=(R()-.5)*50;a[i*3+1]=R()*22;a[i*3+2]=(R()-.5)*50}g.setAttribute('position',new THREE.BufferAttribute(a,3));return g})(),new THREE.PointsMaterial({color:0xbfe3ff,size:.12,transparent:true,opacity:.7}));rn.frustumCulled=false;rn.visible=false;sc.add(rn);
+// ---------- state
+let P={x:0,z:47,y:gy,ang:PI},yaw=0,pit=.4,inBoat=false,keys={},mdown=false,rdown=false,ui=0,pk='',paused=true,started=false,nolock=false;
+let fs='idle',pw=0,fl=0,wtm=0,biteT=0,fi=0,fish=null,fishMesh=null,castDist=0,winT=0,winData=null,pendFinale=false,shake=0,walkT=0,tm=0,hudT=0,rt=0,itab=0;
+const castFrom=new THREE.Vector3(),castTo=new THREE.Vector3(),tipV=new THREE.Vector3(),tmpV=new THREE.Vector3();
+function toast(s,ms){const m=$('msg');m.textContent=s;m.className='on';clearTimeout(toast.h);toast.h=setTimeout(()=>m.className='',ms||3200)}
+const ups=()=>S.rod+S.reel+S.line,night=()=>S.t<5.5||S.t>20.5;
+function qText(){return 'Задача: '+['Найди удочку на столе у костра (E)','Поймай 3 рыбы ('+Math.min(S.caught,3)+'/3). Приманку выбирай в Tab','Поговори со старым рыбаком Макаром (E)','Улучши снасти в хижине-лавке: '+Math.min(ups(),2)+'/2 (E)','Плыви на лодке к затонувшему дереву (метка на карте M) и поймай легенду','Тайна раскрыта! Лови рекорды и заполняй книгу улова'][S.q]}
+function hud(){$('money').textContent='$'+S.money;$('lvl').textContent=S.lvl;$('xpb').style.width=S.xp/(S.lvl*100)*100+'%';$('gear').textContent='Приманка: '+BAITS[S.bait][0]+' · Снасти: '+(100-Math.round(S.wear))+'%';$('q').innerHTML=qText()+mkLine()}
+function done(i){S.side[i]=1;S.money+=SIDE[i][1];toast('Задание выполнено: '+SIDE[i][0]+' +$'+SIDE[i][1],4200);hud();save()}
+// ---------- panels
+function openP(h,k){ui=1;pk=k;$('panel').innerHTML=h;$('panel').hidden=false;$('pr').hidden=true;try{document.exitPointerLock()}catch(e){}}
+function closeP(){ui=0;pk='';$('panel').hidden=true;lock()}
+function lock(){if(nolock)return;try{const r=cv.requestPointerLock();if(r&&r.catch)r.catch(()=>{nolock=true})}catch(e){nolock=true}}
+function shopH(){let h='<h2>Рыбацкая лавка</h2><p>Деньги: $'+S.money+'</p><div class="grid">';
+UPS.forEach(u=>{const l=S[u[0]];h+=l>=2?'<div class="it"><b>'+u[1]+': «'+LV[2]+'»</b><i>максимальный уровень</i></div>':'<div class="it"><b>'+u[1]+': «'+LV[l]+'»</b><i>'+u[2]+'</i><button onclick="buy(\''+u[0]+'\','+u[3][l]+')">Улучшить за $'+u[3][l]+'</button></div>'});
+BAITS.forEach((b,i)=>{h+='<div class="it"><b>'+b[0]+'</b>'+(S.baits[i]?'<i>куплено</i>':'<button onclick="buyB('+i+','+b[1]+')">Купить за $'+b[1]+'</button>')+'</div>'});
+return h+'<div class="it"><b>Ремонт снастей</b><i>износ '+Math.round(S.wear)+'%</i><button onclick="fix()">Починить за $15</button></div></div><button class="x" onclick="closeP()">Закрыть (Esc)</button>'}
+function pay(c){if(S.money<c){toast('Не хватает денег');return false}S.money-=c;return true}
+function buy(k,c){if(!pay(c))return;S[k]++;toast('Куплено!');if(S.q===3&&ups()>=2){S.q=4;toast('Снасти готовы! Плыви к затонувшему дереву',4500)}hud();save();$('panel').innerHTML=shopH()}
+function buyB(i,c){if(!pay(c))return;S.baits[i]=1;S.bait=i;hud();save();$('panel').innerHTML=shopH()}
+function fix(){if(S.wear<1)return;if(!pay(15))return;S.wear=0;hud();save();$('panel').innerHTML=shopH()}
+function selB(i){S.bait=i;hud();save();inv()}
+function inv(t){if(t!==undefined)itab=t;const tabs=['Снасти','Книга улова','Задания','Настройки'].map((n,i)=>'<button class="tb'+(i==itab?' on':'')+'" onclick="inv('+i+')">'+n+'</button>').join('');let b='';
+if(itab==0){b='<p>Удилище «'+LV[S.rod]+'», катушка «'+LV[S.reel]+'», леска «'+LV[S.line]+'», лодка «'+LV[S.boat]+'». Износ снастей: '+Math.round(S.wear)+'%.</p><h3>Приманка</h3><div class="grid">'+BAITS.map((x,i)=>S.baits[i]?'<div class="it'+(S.bait==i?' sel':'')+'"><b>'+x[0]+'</b><i>'+(i<2?'мирная рыба':'хищники')+'</i><button onclick="selB('+i+')">'+(S.bait==i?'Выбрана':'Выбрать')+'</button></div>':'').join('')+'</div>'}
+else if(itab==1){b='<p>Видов: '+Object.keys(S.best).length+'/'+FISH.length+'. Поймано всего: '+S.caught+'</p><div class="grid">'+FISH.map((f,i)=>{const k=S.best[i];return '<div class="it"><img src="'+thumb(i)+'" width="120" height="72" alt="" style="'+(k?'':'filter:brightness(0) opacity(.5)')+'"><b>'+(k?f[0]:'???')+'</b><i>'+(k?'рекорд '+k.toFixed(1)+' кг, '+f[9]:'ещё не поймана')+'</i></div>'}).join('')+'</div>'}
+else if(itab==3)b=setH();else b='<h3>Главное</h3><p>'+qText()+'</p><h3>Поручения Макара ('+S.mk+'/'+MK.length+')</h3><p>'+(S.q<3?'Откроются после рассказа о легенде.':mkLine().replace('<br>',''))+'</p><h3>Дополнительные</h3>'+SIDE.map((s,i)=>'<p>'+(S.side[i]?'✔':'○')+' '+s[0]+' — $'+s[1]+'</p>').join('')+'<h3>Достижения</h3>'+ACH.map((a,i)=>'<p>'+(S.ach[i]?'🏆':'○')+' '+a[0]+'</p>').join('');
+$('panel').innerHTML='<div class="tabs">'+tabs+'</div>'+b+'<button class="x" onclick="closeP()">Закрыть (Tab)</button>'}
+function mapP(){openP('<h2>Карта: Изумрудное озеро</h2><canvas id="mc" width="540" height="365" style="width:100%;border-radius:10px"></canvas><p>🔒 Дикая река, Туманный остров и Тропическая лагуна откроются в следующих обновлениях.</p><button class="x" onclick="closeP()">Закрыть (M)</button>','map');
+const c=$('mc').getContext('2d'),s=2.7,X=x=>(x+100)*s,Z=z=>(z+75)*s;for(let a=0;a<540;a+=5)for(let b=0;b<365;b+=5){const h=H(a/s-100,b/s-75);c.fillStyle=h<-.3?'#2cc9bd':h<8?'#6fb84a':h<24?'#7b8a6c':'#dfe5ea';c.fillRect(a,b,5,5)}
+c.fillStyle='#ff9b3d';c.fillRect(X(0)-5,Z(45)-5,10,10);c.fillStyle='#082a31';c.font='12px sans-serif';c.fillText('Лагерь',X(0)+8,Z(45)+4);
+if(S.q>=2){c.fillStyle='#ffd23f';c.beginPath();c.arc(X(TX),Z(TZ),7,0,7);c.fill();c.fillStyle='#082a31';c.fillText('Затонувшее дерево',X(TX)+10,Z(TZ)+4)}
+c.fillStyle='#c8553d';c.fillRect(X(Bp.x)-4,Z(Bp.z)-4,8,8);c.fillStyle='#fff';c.strokeStyle='#082a31';c.beginPath();c.arc(X(P.x),Z(P.z),6,0,7);c.fill();c.stroke()}
+// ---------- interactions
+const near=(x,z,r)=>Math.hypot(P.x-x,P.z-z)<r;
+function exitSpot(){for(let k=0;k<8;k++){const a=k*PI/4,x=P.x+Math.cos(a)*3,z=P.z+Math.sin(a)*3;if(H(x,z)>-.3||onDock(x,z))return[x,z]}return null}
+let act=null;
+function pickAct(){act=null;if(fs!=='idle'||ui||paused)return;
+if(!inBoat){if(!S.has&&near(3,46,3.5))act=['E — взять удочку',()=>{S.has=1;tblRod.visible=false;rp.visible=true;if(S.q===0)S.q=1;toast('Удочка у тебя! Приманку выбирай в Tab',4000);hud();save()}];
+else if(S.has&&!comp&&near(RX,RZ,3.2))act=['E — соревнование с Фёдором',compMenu];else if(near(-3.5,44,3.5))act=['E — поговорить с Макаром',talk];else if(near(-9,43,4.8))act=['E — лавка',()=>openP(shopH(),'shop')];else if(near(Bp.x,Bp.z,4.6))act=['E — сесть в лодку',()=>{inBoat=true;P.x=Bp.x;P.z=Bp.z;toast('Ты в лодке. WASD — плыть, ЛКМ — удочка')}]}
+else{if(!S.side[4]&&near(-30,-6,6))act=['E — достать сундук',()=>{chestM.visible=chestRing.visible=false;done(4)}];else if(exitSpot())act=['E — выйти на берег',()=>{const s=exitSpot();inBoat=false;P.x=s[0];P.z=s[1];Bp.x=Bp.x;}]}
+if(act){$('pr').textContent=act[0];$('pr').hidden=false}else $('pr').hidden=true}
+let comp=null,rk=0;
+function compStep(dt){rrp.rotation.x=1.1+Math.sin(tm*2)*.03-rk*.8;rk*=Math.exp(-dt*3);if(!comp||paused)return;comp.t-=dt;comp.rn-=dt;if(comp.rn<=0){comp.rn=11+R()*9;const w=.4+R()*R()*(2.5+S.lvl*.6)*(R()<.08?4:1);comp.ri+=w;comp.last=w;rk=1;splash(RX,.05,RZ-3+R()*2,6,.7);beep(500,.1,.06)}if(comp.t<=0&&fs!=='fight'&&fs!=='bite'&&fs!=='win'){compEnd();return}const m=Math.max(0,comp.t|0);$('comp').hidden=false;$('comp').innerHTML='Соревнование: '+((m/60)|0)+':'+String(m%60).padStart(2,'0')+'<br>Ты: '+comp.me.toFixed(1)+' кг · Фёдор: '+comp.ri.toFixed(1)+' кг'}
+function compEnd(){const c=comp;comp=null;$('comp').hidden=true;if(fs==='wait'||fs==='fly'||fs==='charge')fs='idle';let h='<h2>Соревнование окончено</h2><p>Ты: '+c.me.toFixed(1)+' кг · Фёдор: '+c.ri.toFixed(1)+' кг</p>';if(c.me>c.ri){const p=Math.round(c.stake*2.5);S.money+=p;S.xp+=30;S.rep+=2;S.cw++;h+='<p>Победа! Выигрыш: $'+p+' и 30 опыта.</p>';if(!S.side[11])done(11)}else if(c.me===c.ri){S.money+=c.stake;h+='<p>Ничья: ставка возвращена.</p>'}else h+='<p>Фёдор оказался удачливее. Ставка $'+c.stake+' потеряна.</p>';while(S.xp>=S.lvl*100){S.xp-=S.lvl*100;S.lvl++}hud();save();checkAch();openP(h+'<button onclick="closeP()">Хорошо</button>','cmp')}
+function compMenu(){const b=[20,50,100].map(s=>'<button '+(S.money<s?'disabled style="opacity:.4" ':'')+'onclick="compStart('+s+')">Ставка $'+s+'</button>').join(' ');openP('<h2>Фёдор, местный рыбак</h2><p>«Давай посоревнуемся! У нас 2 минуты 30 секунд: у кого больше суммарный вес улова, тот и забирает банк. Победишь — получишь ставку ×2,5.»</p><p>'+b+'</p><button class="x" onclick="closeP()">Не сейчас</button>','cmpm')}
+function compStart(s){if(S.money<s)return;S.money-=s;comp={t:150,me:0,ri:0,rn:9+R()*5,stake:s,last:0};hud();closeP();toast('Соревнование началось! 2:30 — лови больше Фёдора',4000)}
+let rsT=-99;
+function setH(){return '<h3>Графика</h3><p>Качество: <select onchange="S.ql=+this.value;setQ();save()">'+['Низкое','Среднее','Высокое (тени)'].map((n,i)=>'<option value="'+i+'"'+(S.ql==i?' selected':'')+'>'+n+'</option>').join('')+'</select></p><h3>Прогресс</h3><p>Сброс удалит деньги, уровень, снасти, улов, задания и достижения без возможности вернуть.</p><button style="background:var(--coral);color:#fff" onclick="resetP(this)">Сбросить весь прогресс</button>'}
+function resetP(b){if(tm-rsT>4){rsT=tm;b.textContent='Точно сбросить? Нажми ещё раз';return}window.NOSAVE=1;try{localStorage.removeItem('fl2')}catch(e){}location.reload()}
+function mkLine(){if(S.q<3)return '';if(S.mk>=MK.length)return '<br>Поручения Макара выполнены';if(!S.mka)return '<br>Макар ждёт: у него новое поручение (E)';const m=MK[S.mk];return '<br>Макар: '+m.t+' ('+(S.mkd?'вернись к нему':S.mkp+'/'+m.n)+')'}
+function mkProg(f){if(S.q>=3&&S.mka&&!S.mkd&&S.mk<MK.length){const m=MK[S.mk];if(m.f(f)){S.mkp++;if(S.mkp>=m.n){S.mkd=1;S.mkp=m.n;toast('Поручение выполнено! Вернись к Макару за наградой',4500)}}}}
+function mkTalk(){if(S.q<3)return '';let h='';if(S.mkd){const m=MK[S.mk];S.money+=m.r;S.mk++;S.mka=0;S.mkd=0;h+='<p>«Отличная работа! Держи $'+m.r+'.»</p>'}if(S.mk>=MK.length)return h+'<p>«Больше поручений у меня нет, ты настоящий рыбак!»</p>';if(!S.mka){S.mka=1;S.mkp=0;h+='<p><b>Новое поручение:</b> '+MK[S.mk].t+' (награда $'+MK[S.mk].r+')</p>'}else h+='<p>Поручение: '+MK[S.mk].t+' — '+S.mkp+'/'+MK[S.mk].n+'</p>';return h}
+function talk(){let t;if(S.q<2)t='Здравствуй, рыбак! Я Макар. Возьми удочку со стола у костра и поймай три рыбы — тогда поговорим.';
+else if(S.q===2){t='Старики говорят: у затонувшего дерева живёт щука размером с лодку. Её не взять голыми снастями. Купи два улучшения в лавке — и плыви к дереву на лодке. Метка есть на карте (M).';S.q=3}
+else if(S.q===3)t='Снасти ещё слабоваты. Купи в лавке два улучшения: удилище, катушку или леску.';
+else if(S.q===4)t='Дерево на северо-востоке озера. Забрось приманку рядом с ним, держи леску в зелёной зоне — и не сдавайся.';else t='Озеро помнит тебя, рыбак. Остальные воды ждут впереди.';
+const mk=mkTalk();openP('<h2>Старый рыбак Макар</h2><p>«'+t+'»</p>'+mk+'<button onclick="closeP()">Хорошо</button>','dlg');hud();save();checkAch()}
+// ---------- events
+function clearSpot(){if(spotM){sc.remove(spotM);spotM=null}spot=null}
+function mkSpot(k){clearSpot();const fa=Math.atan2(-Math.cos(yaw),-Math.sin(yaw));for(let n=0;n<30;n++){const a=fa+(R()-.5)*1.8,d=9+R()*18,x=P.x+Math.cos(a)*d,z=P.z+Math.sin(a)*d;if(H(x,z)>-2.4)continue;
+spot={k,x,z,t:k==='gold'?14:40};spotM=new THREE.Group();const r=new THREE.Mesh(new THREE.RingGeometry(1.4,1.9,40),new THREE.MeshBasicMaterial({color:k==='gold'?0xffd23f:0x4fe0ff,transparent:true,opacity:.85,side:THREE.DoubleSide}));r.rotation.x=-PI/2;spotM.add(r);
+if(k==='school')for(let i=0;i<7;i++){const b=new THREE.Mesh(shG,shM);b.scale.set(.5,1,.2);b.position.set(Math.cos(i*.9)*.9,-.05,Math.sin(i*.9)*.9);b.rotation.y=-i*.9;spotM.add(b)}
+spotM.position.set(x,.12,z);sc.add(spotM);toast(k==='gold'?'✨ Золотая рыба! Закинь приманку в золотой круг':'🐟 Секретный косяк редких рыб! Закинь приманку в круг',4500);return}}
+function events(dt){evT-=dt;if(evT<=0){evT=35+R()*45;const r=R();if(r<.3)mkSpot('gold');else if(r<.58)mkSpot('school');else if(fs==='wait'&&r<.85){fi=[1,4,7,3][(R()*4)|0];wtm=0;toast('⚡ Внезапная поклёвка огромной рыбы!',3000)}}
+if(spot){spot.t-=dt;spotM.position.y=.12+Math.sin(tm*4)*.03;spotM.rotation.y=tm*1.5;spotM.scale.setScalar(1+Math.sin(tm*5)*.06);if(spot.t<=0)clearSpot()}
+wxT-=dt;if(wxT<=0){wxT=70+R()*90;const n=wx===0?(R()<.6?1:2):(R()<.5?0:(wx===1?2:1));wx=n;toast(['☀ Погода резко прояснилась','🌧 Начался дождь — выходит редкая рыба','⛈ Гроза! Ночью в грозу ловить особенно опасно'][n],4500)}
+if(wx===2){lt-=dt;if(lt<=0){lt=3+R()*7;flash=1;setTimeout(()=>noise(130,'lowpass',2.4,.5),300+R()*900)}}flash*=Math.exp(-dt*6);
+if(night()){nightT-=dt;if(nightT<=0){nightT=7+R()*8;const a=R()*6.28,d=8+R()*20,x=P.x+Math.cos(a)*d,z=P.z+Math.sin(a)*d;if(H(x,z)<-2){splash(x,.05,z,6,1);ring(x+1,z,1.6);noise(900,'bandpass',.5,.08);if(R()<.25)toast('Загадочные всплески в ночной воде…',2500)}}}
+jumpT-=dt;if(jumpT<=0){jumpT=4+R()*6;const a=R()*6.28,d=8+R()*22,x=P.x+Math.cos(a)*d,z=P.z+Math.sin(a)*d;if(H(x,z)<-2.2){const m=mkFish(FISH[(R()*8)|0][7],.28+R()*.2);m.position.set(x,0,z);sc.add(m);jmp.push({m,t:0,dx:R()-.5,dz:R()-.5});splash(x,.05,z,4,.5);noise(2000,'highpass',.3,.06)}}}
+// ---------- fishing
+function pickFish(d,boost){const rain=wx>0,w=FISH.map((f,i)=>{let v=f[5];if(i==8)v=rain?14:0;if(i==10)v=S.q>=4?.5:0;if(i==11)v=night()?.4:0;if(i==19)v=night()?1.2:0;v*=AFF[f[8]][S.bait];v*=f[4]>.6?(d>18?1.5:.35):(d>18?.7:1.3);if(boost&&i>4)v*=3;return v});let r=R()*w.reduce((a,b)=>a+b,0);for(let i=0;i<w.length;i++){r-=w[i];if(r<=0)return i}return 0}
+function doCast(){const fx=-Math.sin(yaw),fz=-Math.cos(yaw);castDist=5+pw*34;tip.getWorldPosition(castFrom);castTo.set(P.x+fx*castDist,0,P.z+fz*castDist);fs='fly';fl=0;beep(500,.15,.08);noise(1800,'highpass',.2,.1);lure.position.copy(castFrom)}
+function land(){lure.position.copy(castTo);if(H(castTo.x,castTo.z)>-.6){toast('Приманка упала на берег — целься в воду');fs='idle';return}
+splash(castTo.x,.05,castTo.z,10,1);noise(1500,'highpass',.4,.2);let boost=false,forced=-1;
+if(spot&&Math.hypot(spot.x-castTo.x,spot.z-castTo.z)<(spot.k==='gold'?7:10)){if(spot.k==='gold')forced=9;else boost=true}
+if(S.q===4&&Math.hypot(castTo.x-TX,castTo.z-TZ)<10){forced=10;toast('Под водой что-то огромное…',3000)}
+fi=forced>=0?forced:pickFish(castDist,boost);const af=AFF[FISH[fi][8]][S.bait];wtm=forced>=0?(forced==9?1.2:3):(2+R()*6)/(.4+af*.7)/(boost?2.5:1);fs='wait'}
+function startFight(){const F=FISH[fi];let kg=F[1]+(F[2]-F[1])*Math.pow(R(),2.2);if(fi==10)kg=24+R()*6;if(fi==11)kg=90+R()*50;const cm=Math.round(30*Math.cbrt(kg));
+fish={i:fi,kg,cm,pull:Math.min(1,(.35+Math.min(.65,Math.log10(1+kg)*.28))*(F[3]*.7+.3)),stam:1,dist:castDist,dir:1,nt:1,dash:0,dashT:0,jt:0,ang:0,T:.3,over:0,slack:0,maxT:0,base:Math.atan2(castTo.z-P.z,castTo.x-P.x)};
+fishMesh=mkFish(F[7],Math.max(.3,cm/200));fishMesh.position.set(castTo.x,-.12,castTo.z);sc.add(fishMesh);fs='fight';splash(castTo.x,.05,castTo.z,8,1);beep(300,.2,.12);toast('Рыба на крючке! Держи леску в зелёной зоне',3000);$('fight').hidden=false}
+function endFight(){$('fight').hidden=true;S.wear=Math.min(100,S.wear+2+fish.maxT*6);hud();save()}
+function lose(m){toast(m,3500);if(fishMesh){sc.remove(fishMesh);fishMesh=null}if(m.indexOf('лопнула')>=0)S.wear=Math.min(100,S.wear+8);beep(120,.4,.2,'sawtooth');endFight();fs='idle';return 1}
+function win(){const f=fish,F=FISH[f.i];endFight();const pr=Math.round(f.kg*F[6]*(1+S.rep*.005)),xp=Math.round(8+f.kg*3+(F[9]!=='Обычная'?15:0)),side=[];
+S.money+=pr;S.xp+=xp;S.rep+=RAR.indexOf(F[9])+1;S.caught++;if(comp)comp.me+=f.kg;S.best[f.i]=Math.max(S.best[f.i]||0,f.kg);let up=false;while(S.xp>=S.lvl*100){S.xp-=S.lvl*100;S.lvl++;up=true}
+if(S.q===1&&S.caught>=3){S.q=2;side.push('Три рыбы пойманы! Поговори с Макаром')}
+winData={f,pr,xp,up,side};fs='win';winT=0;if(f.i===9)clearSpot();if(f.i===10&&S.q===4){S.q=5;S.done=1;S.money+=500;pendFinale=true}
+if(!S.side[0]&&f.i==0)done(0);if(!S.side[1]&&f.kg>=5)done(1);if(!S.side[2]&&f.i==8)done(2);if(!S.side[3]&&night()&&wx==2)done(3);if(!S.side[5]&&f.cm>=100)done(5);if(!S.side[6]&&wx>0)done(6);if(!S.side[7]&&S.t>=5&&S.t<7)done(7);if(!S.side[8]&&f.i==9)done(8);if(!S.side[9]&&f.i==11)done(9);if(!S.side[10]&&Object.keys(S.best).length>=5)done(10);mkProg(f);
+checkAch();
+beep(660,.15,.2);setTimeout(()=>beep(880,.15,.2),150);setTimeout(()=>beep(1320,.3,.2),300);hud();save()}
+function fightStep(dt){const f=fish,F=FISH[f.i];f.nt-=dt;
+if(f.nt<=0){f.dir=R()<.5?-1:1;f.nt=1+R()*2.2;f.dash=R()<.35+.25*F[3]?1:0;f.dashT=.7+R()*.7;if(f.dash&&f.stam>.15){beep(220,.12,.06,'square');ring(fishMesh.position.x,fishMesh.position.z,1.4)}}
+if(f.dash){f.dashT-=dt;if(f.dashT<=0)f.dash=0}
+const st=(keys.KeyD?1:0)-(keys.KeyA?1:0),ctr=st===-f.dir?.45:(st===f.dir?1.5:1.1),reel=mdown?1:0,slack=keys.Space?1:0;
+let pf=(.3+.7*f.stam)*(f.dash?1.8:.6)*ctr*(1-.12*S.rod);
+if(f.jt>0){f.jt-=dt;pf*=1.3;if(f.jt<=0){splash(fishMesh.position.x,.05,fishMesh.position.z,12,1.2);noise(1200,'highpass',.5,.2);shake=.5}}
+else if(f.stam>.3&&f.dist>6&&R()<dt*.12*F[3]){f.jt=.9;f.T+=.18;splash(fishMesh.position.x,.05,fishMesh.position.z,12,1.2);noise(1200,'highpass',.5,.2);shake=.7}
+let Tt=.1+f.pull*pf*.5+reel*.32*Math.min(1,.5+f.stam*.6);Tt*=(1+S.wear/250)/(1+.25*S.line);if(slack)Tt=.04;
+f.T+=(Tt-f.T)*Math.min(1,dt*3.5);f.maxT=Math.max(f.maxT,f.T);
+const rs=(3.2+S.reel)*(1-.5*f.stam)*(f.T<.9?1:.3);f.dist+=(-reel*rs+f.pull*pf*F[3]*1.3+(slack?1.5:0))*dt;
+if(f.T>.35&&f.T<.88)f.stam=Math.max(0,f.stam-dt*(.07+.08*reel)*(st===-f.dir?1.9:1)/(1+f.kg*.02));
+f.over=f.T>.98?f.over+dt:Math.max(0,f.over-dt);f.slack=(f.T<.14&&!slack)?f.slack+dt:Math.max(0,f.slack-dt);
+if(reel){rt-=dt;if(rt<=0){rt=.11;beep(140+f.T*200,.04,.05,'square')}}
+if(f.over>.35)return lose('Леска лопнула!');if(f.slack>2.6)return lose('Рыба сошла: леска слишком слабая');if(f.dist>60)return lose('Рыба ушла на глубину');if(f.dist<=2.2)return win();
+f.ang=cl(f.ang+f.dir*dt*(f.dash?.7:.25),-1,1);const a=f.base+f.ang,x=P.x+Math.cos(a)*f.dist,z=P.z+Math.sin(a)*f.dist;let y=-.12;
+if(f.jt>0){const k=1-f.jt/.9;y+=Math.sin(k*PI)*(1.3+fishMesh.scale.x*2.5);fishMesh.rotation.z=Math.cos(k*PI)*.9}else fishMesh.rotation.z=Math.sin(tm*14)*.08;
+fishMesh.position.set(x,y,z);fishMesh.rotation.y=-(a+(f.dash?f.dir*.5:0));
+$('bT').style.width=cl(f.T,0,1)*100+'%';$('bT').style.background=f.T>.88?'var(--coral)':'var(--teal)';$('bS').style.width=f.stam*100+'%';$('bD').style.width=cl(f.dist/60,0,1)*100+'%';const sd=st===-f.dir;$('fdir').textContent=(f.dir>0?'Рыба уходит вправо ▶  держи удилище влево (A)':'◀ Рыба уходит влево  держи удилище вправо (D)')+(f.dash?'  — РЫВОК!':'');$('fdir').style.color=sd?'#2cc9bd':(f.dash?'#ef5d4b':'#f6edd3')}
+function fishStep(dt,g){
+const rx={idle:1.05,charge:1.05-pw*1.5,fly:1.35,wait:1.2,bite:.95,fight:.55+(fish?fish.T*.35:0),win:1.8}[fs];rp.rotation.x=lp(rp.rotation.x,rx,Math.min(1,dt*10));
+const vis=fs!=='idle'&&fs!=='charge'&&S.has;lure.visible=vis&&fs!=='fight'&&fs!=='win';lineM.visible=vis&&fs!=='win';
+if(fs==='charge'){pw=Math.min(1,pw+dt*.7);$('power').hidden=false;$('pb').style.width=pw*100+'%'}else $('power').hidden=true;
+tip.getWorldPosition(tipV);
+if(fs==='fly'){fl+=dt/.9;const k=Math.min(1,fl);lure.position.lerpVectors(castFrom,castTo,k);lure.position.y+=Math.sin(k*PI)*(2.5+castDist*.1);if(k>=1)land()}
+else if(fs==='wait'){const wy=wv(lure.position.x,lure.position.z,tm);lure.position.y=wy+.02+Math.sin(tm*3)*.025;wtm-=dt;if(R()<dt*1.2)ring(lure.position.x,lure.position.z,.5);
+if(wtm<=0){fs='bite';biteT=1.5-FISH[fi][3]*.3;toast('Поклёвка! Жми ЛКМ — подсечка!',1400);beep(880,.12,.2);setTimeout(()=>beep(1180,.2,.2),120);splash(lure.position.x,.05,lure.position.z,5,.5)}}
+else if(fs==='bite'){lure.position.y=wv(lure.position.x,lure.position.z,tm)-.12+Math.sin(tm*28)*.08;biteT-=dt;if(biteT<=0){toast('Рыба сорвалась: не успел подсечь');fs='idle'}}
+else if(fs==='fight')fightStep(dt);
+else if(fs==='win'){winT+=dt;if(fishMesh){const k=Math.min(1,winT*2),L=cl(winData.f.cm/200,.3,1.3),fw=pl.rotation.y;fishMesh.position.set(P.x+Math.sin(fw)*.5,P.y+2.3+Math.sin(tm*3)*.05,P.z+Math.cos(fw)*.5);fishMesh.rotation.set(0,tm*1.2,Math.sin(tm*8)*.15);fishMesh.scale.setScalar(L*k)}
+if(winT>.9&&$('card').hidden){const w=winData,F=FISH[w.f.i];$('card').innerHTML='<img src="'+thumb(w.f.i)+'" width="150" height="90" alt=""><h2>'+F[0]+'</h2><div>'+w.f.kg.toFixed(2)+' кг · '+w.f.cm+' см · '+F[9]+'</div><div style="margin-top:6px">+$'+w.pr+' · +'+w.xp+' опыта'+(w.up?' · Новый уровень '+S.lvl+'!':'')+'</div>'+(w.side.length?'<div style="margin-top:6px;color:#0a6a60">'+w.side[0]+'</div>':'')+'<div style="margin-top:8px;font-size:12px;opacity:.6">Клик — закрыть</div>';$('card').hidden=false}
+if(winT>3.8){$('card').hidden=true;if(fishMesh){sc.remove(fishMesh);fishMesh=null}fs='idle';if(pendFinale){pendFinale=false;openP('<h2>Тайна Изумрудного озера раскрыта!</h2><p>Гигантская щука поймана, и Макар молча снимает шапку. Награда: +$500.</p><p>Дикая река, Туманный остров и Тропическая лагуна откроются в следующих обновлениях. Лови рекорды и заполняй книгу улова!</p><button onclick="closeP()">Продолжить</button>','fin')}}}
+const la=lg.attributes.position.array;la[0]=tipV.x;la[1]=tipV.y;la[2]=tipV.z;const e=fs==='fight'&&fishMesh?fishMesh.position:lure.position;la[3]=e.x;la[4]=e.y+.1;la[5]=e.z;lg.attributes.position.needsUpdate=true}
+function onDown(){if(fs==='idle'){if(S.has){fs='charge';pw=0}else toast('Сначала найди удочку на столе у костра')}else if(fs==='wait'){fs='idle';toast('Леска смотана')}else if(fs==='bite')startFight()}
+function onUp(){if(fs==='charge'){if(pw<.08){fs='idle';return}doCast()}}
+// ---------- input
+function okPos(x,z){if(inBoat)return H(x,z)<-1.1&&Math.hypot(x/85,(z+8)/65)<.75;if(x>-12.3&&x<-5.7&&z>43&&z<49.2)return false;if(Math.hypot(x-9,z-47)<2.2)return false;return onDock(x,z)||(H(x,z)>-.35&&H(x,z)<20)}
+addEventListener('keydown',e=>{keys[e.code]=1;if(['Tab','Space','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();if(paused||e.repeat)return;
+if(e.code==='Tab'){if(ui&&pk==='inv')closeP();else if(!ui&&fs==='idle'){openP('','inv');inv()}}
+else if(e.code==='KeyM'){if(ui&&pk==='map')closeP();else if(!ui){mapP()}}
+else if(e.code==='Escape'&&ui)closeP();
+else if(e.code==='KeyE'&&!ui&&act)act[1]()});
+addEventListener('keyup',e=>{keys[e.code]=0});
+document.addEventListener('mousemove',e=>{if((document.pointerLockElement===cv||(nolock&&rdown))&&!ui&&!paused){yaw-=e.movementX*.0025;pit=cl(pit+e.movementY*.0025,.05,1.3)}});
+document.addEventListener('mousedown',e=>{if(paused||ui)return;if(e.button===2){rdown=true;return}if(e.button!==0)return;if(fs==='win'&&winT>.7){winT=99;return}if(!nolock&&document.pointerLockElement!==cv){lock();return}mdown=true;onDown()});
+document.addEventListener('mouseup',e=>{if(e.button===2)rdown=false;if(e.button===0){mdown=false;if(!paused&&!ui)onUp()}});
+addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement===cv)nolock=false;else if(started&&!ui&&!nolock){paused=true;$('start').hidden=false;$('go').textContent='Продолжить'}});
+document.addEventListener('pointerlockerror',()=>{nolock=true;toast('Курсор не захвачен: камера — правая кнопка мыши или стрелки',4500)});
+$('go').onclick=()=>{au();$('start').hidden=true;paused=false;mdown=false;if(!started){started=true;toast('Добро пожаловать на Изумрудное озеро! Найди удочку у костра (E)',5000)}lock();setTimeout(()=>{if(!document.pointerLockElement)nolock=true},700)};
+$('qual').value=S.ql;$('qual').onchange=e=>{S.ql=+e.target.value;setQ();save()};
+// ---------- main loop
+const clock=new THREE.Clock();
+function step(dt){tm+=dt;const g=!paused&&!ui;if(!paused)S.t=(S.t+dt*.06)%24;
+if(g){if(keys.ArrowLeft)yaw+=dt*1.8;if(keys.ArrowRight)yaw-=dt*1.8;if(keys.ArrowUp)pit=Math.max(.05,pit-dt);if(keys.ArrowDown)pit=Math.min(1.3,pit+dt)}
+if(!started){yaw=Math.sin(tm*.1)*.7;pit=.3}
+// movement
+let moving=false;const mx=(keys.KeyD?1:0)-(keys.KeyA?1:0),mz=(keys.KeyW?1:0)-(keys.KeyS?1:0);
+if(g&&fs==='idle'&&(mx||mz)){const l=Math.hypot(mx,mz),fx=-Math.sin(yaw),fz=-Math.cos(yaw),rx=Math.cos(yaw),rz=-Math.sin(yaw),dx=(fx*mz+rx*mx)/l,dz=(fz*mz+rz*mx)/l,sh=keys.ShiftLeft||keys.ShiftRight,sp=inBoat?(4.5+S.boat*2.2)*(sh?1.5:1):(sh?6.8:3.6),nx=P.x+dx*sp*dt,nz=P.z+dz*sp*dt;
+if(okPos(nx,nz)){P.x=nx;P.z=nz}else if(okPos(nx,P.z))P.x=nx;else if(okPos(P.x,nz))P.z=nz;P.ang=Math.atan2(dx,dz);walkT+=dt*sp;moving=true}
+if(fs!=='idle'&&fs!=='win')P.ang=ang(P.ang,Math.atan2(-Math.sin(yaw),-Math.cos(yaw)),Math.min(1,dt*8));
+const wy=wv(P.x,P.z,tm);P.y=inBoat?.45+wy:lp(P.y,G(P.x,P.z),Math.min(1,dt*14));pl.position.set(P.x,P.y,P.z);pl.rotation.y=ang(pl.rotation.y,P.ang,Math.min(1,dt*12));
+legs[0].rotation.x=moving&&!inBoat?Math.sin(walkT*2.2)*.6:0;legs[1].rotation.x=-legs[0].rotation.x;
+if(inBoat){Bp.x=P.x;Bp.z=P.z;Bp.a=ang(Bp.a,P.ang,Math.min(1,dt*3))}
+boat.position.set(Bp.x,wv(Bp.x,Bp.z,tm)+.05,Bp.z);boat.rotation.y=Bp.a;boat.rotation.z=Math.sin(tm*1.3+Bp.x)*.03;
+if(!paused)fishStep(dt,g);if(g)events(dt);compStep(dt);pickAct();
+// day / weather
+const t=S.t,a=(t-6)/12*PI,day=Math.max(0,Math.sin(a)),sx=Math.cos(a)*220,sy=Math.sin(a)*220;
+const wkT=[1,.65,.42][wx],wdT=[.006,.012,.019][wx];wk+=(wkT-wk)*Math.min(1,dt*.4);wd+=(wdT-wd)*Math.min(1,dt*.4);
+const sky=skyAt(t).multiplyScalar(wk).lerp(new THREE.Color(0xdfe8ff),flash*.6);sc.background=sky;sc.fog.color.copy(sky);sc.fog.density=wd;
+sunM.visible=sy>-5;sunM.position.set(cam.position.x+sx,sy,cam.position.z+60);moonM.visible=-sy>-5;moonM.position.set(cam.position.x-sx,-sy,cam.position.z-60);
+sun.position.set(P.x+sx*.5,Math.abs(sy)*.5+20,P.z+30);sun.target.position.set(P.x,0,P.z);sun.intensity=Math.max(.15,day*1.15)*(wx?.65:1);sun.color.setHSL(.1,.8,.6+.3*day);
+hemi.intensity=.2+.65*Math.min(1,day*1.6)+flash*1.5;stars.material.opacity=cl(1-day*3,0,1)*(wx?.3:1);stars.position.copy(cam.position);
+fireL.intensity=((1-day)*1.5+.3)*(.85+.15*Math.sin(tm*17));fire.scale.set(1,.9+.2*Math.sin(tm*13),1);
+// water / fish shadows / fx
+for(let i=0;i<wp.count;i++){wp.array[i*3+1]=wv(w0[i*3],w0[i*3+2]-8,tm)}wp.needsUpdate=true;if((tm*10|0)%3===0)wg.computeVertexNormals();
+shd.forEach(s=>{const nx=s.m.position.x+Math.cos(s.a)*s.v*dt,nz=s.m.position.z+Math.sin(s.a)*s.v*dt;if(H(nx,nz)>-2.2)s.a+=PI*(.5+R());else{s.m.position.x=nx;s.m.position.z=nz}s.m.rotation.y=-s.a});
+for(let i=rings.length-1;i>=0;i--){const r=rings[i];r.t+=dt;r.m.scale.setScalar(1+r.t*3*r.s);r.m.material.opacity=.8*(1-r.t/1.2);if(r.t>1.2){sc.remove(r.m);r.m.material.dispose();rings.splice(i,1)}}
+for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.vy-=9*dt;p.m.position.x+=p.vx*dt;p.m.position.y+=p.vy*dt;p.m.position.z+=p.vz*dt;if(p.m.position.y<0&&p.vy<0){sc.remove(p.m);parts.splice(i,1)}}
+for(let i=jmp.length-1;i>=0;i--){const j=jmp[i];j.t+=dt;j.m.position.x+=j.dx*dt*3;j.m.position.z+=j.dz*dt*3;j.m.position.y=Math.sin(j.t*PI)*1.6-.1;j.m.rotation.y=-Math.atan2(j.dz,j.dx);j.m.rotation.z=Math.cos(j.t*PI)*.9;if(j.t>=1){splash(j.m.position.x,.05,j.m.position.z,5,.6);sc.remove(j.m);jmp.splice(i,1)}}
+chestRing.scale.setScalar(1+Math.sin(tm*3)*.15);beacon.visible=S.q>=2&&S.q<5;
+rn.visible=wx>0;if(wx>0){rn.position.set(P.x,0,P.z);const ar=rn.geometry.attributes.position.array;for(let i=0;i<900;i++){ar[i*3+1]-=22*dt;if(ar[i*3+1]<0)ar[i*3+1]+=22}rn.geometry.attributes.position.needsUpdate=true;rainT-=dt;if(rainT<=0){rainT=.12;const x=P.x+(R()-.5)*30,z=P.z+(R()-.5)*30;if(H(x,z)<-1)ring(x,z,.4)}}
+if(AC&&!paused&&day>.1&&wx===0&&R()<dt*.25){const f=2000+R()*1500;beep(f,.07,.025);setTimeout(()=>beep(f*1.2,.07,.025),110)}
+// camera
+let d=inBoat?9:7,p=pit,fov=60,tx=P.x,ty=P.y+1.7,tz=P.z,k=10;
+if(fs==='fight'&&fishMesh){d=6;p=Math.min(p,.4);fov=lp(62,46,fish.T);tx=lp(P.x,fishMesh.position.x,.4);tz=lp(P.z,fishMesh.position.z,.4)}
+let px=P.x+Math.sin(yaw)*Math.cos(p)*d,py=ty+Math.sin(p)*d,pz=P.z+Math.cos(yaw)*Math.cos(p)*d;
+if(fs==='win'){const w=pl.rotation.y;px=P.x+Math.sin(w)*3.4;pz=P.z+Math.cos(w)*3.4;py=P.y+1.9;ty=P.y+2;tx=P.x;tz=P.z;fov=42;k=2.5}
+cam.position.lerp(tmpV.set(px,py,pz),Math.min(1,dt*k));const gh=Math.max(H(cam.position.x,cam.position.z),0)+.7;if(cam.position.y<gh)cam.position.y=gh;
+if(shake>.01){cam.position.x+=(R()-.5)*shake*.3;cam.position.y+=(R()-.5)*shake*.3;shake*=Math.exp(-dt*5)}
+cam.lookAt(tx,ty,tz);cam.fov+=(fov-cam.fov)*Math.min(1,dt*4);cam.updateProjectionMatrix();
+if(tm-hudT>.5){hudT=tm;const hh=S.t|0;$('clk').textContent=String(hh).padStart(2,'0')+':'+String((S.t%1)*60|0).padStart(2,'0')+' · '+(S.t<5?'Ночь':S.t<10?'Утро':S.t<17?'День':S.t<20.5?'Закат':'Ночь');$('wxs').textContent=['☀ Ясно','🌧 Дождь','⛈ Гроза'][wx];hud();if(AQ.length&&fs!=='win'&&tm>aqT){toast('🏆 Достижение: '+AQ.shift(),3200);aqT=tm+3.4}}}
+function loop(){requestAnimationFrame(loop);step(Math.min(clock.getDelta(),.05));rd.render(sc,cam)}
+setQ();hud();loop();
+</script></body></html>
